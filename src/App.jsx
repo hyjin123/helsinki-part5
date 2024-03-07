@@ -19,6 +19,8 @@ const App = () => {
 
     try {
       const user = await loginService.login({ username, password });
+      // make the user data persist even if page is refreshed
+      window.localStorage.setItem("loggedInUser", JSON.stringify(user));
       setUser(user);
       setUsername("");
       setPassword("");
@@ -28,6 +30,13 @@ const App = () => {
         setErrorMessage(null);
       }, 5000);
     }
+  };
+
+  const handleLogout = () => {
+    // wipe out the entire local storage
+    window.localStorage.clear();
+    // set the user state to empty
+    setUser(null);
   };
 
   if (user === null) {
@@ -64,6 +73,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <h3>logged in as {user.name}</h3>
+      <button onClick={handleLogout}>logout</button>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
