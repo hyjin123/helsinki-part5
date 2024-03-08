@@ -36,12 +36,11 @@ const App = () => {
 
       // set the token, so it can be used when submitting a new blog (making a post request)
       blogService.setToken(user.token);
-
       setUser(user);
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setErrorMessage("Wrong Credentials");
+      setErrorMessage(exception.response.data.error);
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
@@ -57,24 +56,36 @@ const App = () => {
 
   const handleBlogSubmit = async (event) => {
     event.preventDefault();
-    const result = await blogService.create({
-      title,
-      author,
-      url,
-    });
 
-    // re-set the blog list, so it shows when new blog is added right away
-    setBlogs([...blogs, result]);
-    setTitle("");
-    setAuthor("");
-    setUrl("");
+    try {
+      const result = await blogService.create({
+        title,
+        author,
+        url,
+      });
+
+      // re-set the blog list, so it shows when new blog is added right away
+      setBlogs([...blogs, result]);
+      setTitle("");
+      setAuthor("");
+      setUrl("");
+      setErrorMessage(`New Blog: ${title} has been added!`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    } catch (exception) {
+      setErrorMessage(exception.response.data.error);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
   };
 
   if (user === null) {
     return (
       <div>
-        <div>{errorMessage}</div>
         <h2>Login to application to view blogs</h2>
+        <div>{errorMessage}</div>
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -106,6 +117,7 @@ const App = () => {
         <h2>blogs</h2>
         <h3>logged in as {user.name}</h3>
         <button onClick={handleLogout}>logout</button>
+        <div>{errorMessage}</div>
         <div>
           <h2>Create a new blog</h2>
           <form onSubmit={handleBlogSubmit}>
