@@ -35,6 +35,9 @@ const Blog = ({ blog, handleLikeSubmit }) => {
             <button onClick={handleLikeSubmit}>like</button>
           </div>
           <div>{blog.user.name}</div>
+          <div>
+            <button>remove</button>
+          </div>
         </div>
       </div>
     </div>

@@ -103,6 +103,10 @@ const App = () => {
     }
   };
 
+  const compare = (a, b) => {
+    return b.likes - a.likes;
+  };
+
   if (user === null) {
     return (
       <div>
@@ -144,7 +148,7 @@ const App = () => {
           <BlogForm createBlog={handleBlogSubmit} />
         </Togglable>
         <div>
-          {blogs.map((blog) => (
+          {blogs.sort(compare).map((blog) => (
             <Blog
               key={blog.id}
               blog={blog}
