@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLikeSubmit }) => {
   const [view, setView] = useState(false);
 
   const toggleVisibility = () => {
@@ -17,6 +17,7 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
+
   return (
     <div style={blogStyle}>
       <div>
@@ -31,7 +32,7 @@ const Blog = ({ blog }) => {
           <div>{blog.url}</div>
           <div>
             likes: {blog.likes}
-            <button>like</button>
+            <button onClick={handleLikeSubmit}>like</button>
           </div>
           <div>{blog.author}</div>
         </div>

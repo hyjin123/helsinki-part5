@@ -11,11 +11,13 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const [reset, setReset] = useState(false);
   const blogFormRef = useRef();
 
+  // fetches blog list again once like is modified
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+  }, [reset]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedInUser");
@@ -79,6 +81,26 @@ const App = () => {
     }
   };
 
+  const handleLikeSubmit = async (blog) => {
+    try {
+      const result = await blogService.like({
+        id: blog.id,
+        title: blog.title,
+        likes: blog.likes + 1,
+        author: blog.author,
+        url: blog.url,
+        user: blog.user.id,
+      });
+      // re-set the blog list, so it shows the new likes value
+      setReset(!reset);
+    } catch (exception) {
+      setErrorMessage(exception.response.data.error);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
+  };
+
   if (user === null) {
     return (
       <div>
@@ -121,7 +143,11 @@ const App = () => {
         </Togglable>
         <div>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleLikeSubmit={() => handleLikeSubmit(blog)}
+            />
           ))}
         </div>
       </div>
