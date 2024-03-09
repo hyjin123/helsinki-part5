@@ -11,13 +11,12 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [reset, setReset] = useState(false);
   const blogFormRef = useRef();
 
   // fetches blog list again once like is modified
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, [reset]);
+  }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedInUser");
@@ -74,7 +73,7 @@ const App = () => {
         setErrorMessage(null);
       }, 5000);
     } catch (exception) {
-      setErrorMessage(exception.response.data.error);
+      setErrorMessage("Cannot add the blog");
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
@@ -83,18 +82,21 @@ const App = () => {
 
   const handleLikeSubmit = async (blog) => {
     try {
-      const result = await blogService.like({
-        id: blog.id,
-        title: blog.title,
-        likes: blog.likes + 1,
-        author: blog.author,
-        url: blog.url,
-        user: blog.user.id,
+      const result = await blogService.like(blog);
+
+      const updatedBlogList = blogs.map((element) => {
+        if (element.id === blog.id) {
+          result.user = blog.user;
+          return result;
+        } else {
+          return element;
+        }
       });
-      // re-set the blog list, so it shows the new likes value
-      setReset(!reset);
+
+      // re-set the blog list with the new updated information
+      setBlogs(updatedBlogList);
     } catch (exception) {
-      setErrorMessage(exception.response.data.error);
+      setErrorMessage("Cannot update the blog");
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);

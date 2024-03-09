@@ -21,7 +21,7 @@ const Blog = ({ blog, handleLikeSubmit }) => {
   return (
     <div style={blogStyle}>
       <div>
-        {blog.title}
+        {blog.title} - {blog.author}
         <button style={hideWhenVisible} onClick={toggleVisibility}>
           view
         </button>
@@ -34,7 +34,7 @@ const Blog = ({ blog, handleLikeSubmit }) => {
             likes: {blog.likes}
             <button onClick={handleLikeSubmit}>like</button>
           </div>
-          <div>{blog.author}</div>
+          <div>{blog.user.name}</div>
         </div>
       </div>
     </div>
