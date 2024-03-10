@@ -95,6 +95,10 @@ const App = () => {
 
       // re-set the blog list with the new updated information
       setBlogs(updatedBlogList);
+      setErrorMessage(`You liked a blog!`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
     } catch (exception) {
       setErrorMessage("Cannot update the blog");
       setTimeout(() => {
@@ -107,6 +111,34 @@ const App = () => {
     return b.likes - a.likes;
   };
 
+  const handleDelete = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      try {
+        const result = await blogService.remove(blog.id);
+
+        const updatedBlogList = blogs.filter(
+          (element) => element.id !== result.id
+        );
+
+        // re-set the blog list with the new updated information
+        setBlogs(updatedBlogList);
+
+        setErrorMessage(
+          `Blog: ${result.title} by ${result.title} has been deleted!`
+        );
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      } catch (exception) {
+        setErrorMessage("Cannot delete the blog");
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      }
+    }
+  };
+
+  // 7f8, 15
   if (user === null) {
     return (
       <div>
@@ -152,7 +184,9 @@ const App = () => {
             <Blog
               key={blog.id}
               blog={blog}
+              user={user}
               handleLikeSubmit={() => handleLikeSubmit(blog)}
+              handleDelete={() => handleDelete(blog)}
             />
           ))}
         </div>

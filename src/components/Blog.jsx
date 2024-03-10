@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog, handleLikeSubmit }) => {
+const Blog = ({ blog, user, handleLikeSubmit, handleDelete }) => {
   const [view, setView] = useState(false);
 
   const toggleVisibility = () => {
@@ -35,9 +35,12 @@ const Blog = ({ blog, handleLikeSubmit }) => {
             <button onClick={handleLikeSubmit}>like</button>
           </div>
           <div>{blog.user.name}</div>
-          <div>
-            <button>remove</button>
-          </div>
+          {/* only allow user to see the remove button if they are the creator of the blog */}
+          {blog.user.id === user.id && (
+            <div>
+              <button onClick={handleDelete}>remove</button>
+            </div>
+          )}
         </div>
       </div>
     </div>
