@@ -95,7 +95,7 @@ const App = () => {
 
       // re-set the blog list with the new updated information
       setBlogs(updatedBlogList);
-      setErrorMessage(`You liked a blog!`);
+      setErrorMessage("You liked a blog!");
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
