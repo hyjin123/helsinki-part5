@@ -74,7 +74,6 @@ describe("<Blog />", () => {
     await dummyUser.click(likeButton);
     await dummyUser.click(likeButton);
 
-    screen.debug();
     // test to see if the mock handler is called twice
     expect(mockHandler.mock.calls).toHaveLength(2);
   });
