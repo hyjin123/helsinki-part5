@@ -16,8 +16,12 @@ describe("<Blog />", () => {
 
   const user = { name: "Nancy Tran", username: "Best", id: "123" };
 
+  const mockHandler = vi.fn();
+
   beforeEach(() => {
-    container = render(<Blog blog={blog} user={user} />).container;
+    container = render(
+      <Blog blog={blog} user={user} handleLikeSubmit={mockHandler} />
+    ).container;
   });
 
   test("renders content", () => {
@@ -55,5 +59,23 @@ describe("<Blog />", () => {
     // make sure the div that contains the url and likes shows
     const div = container.querySelector(".blog");
     expect(div).toHaveStyle("display: block");
+  });
+
+  test("when a like button is clicked twice, event handler is called twice", async () => {
+    // view button is pressed once first
+    const dummyUser = userEvent.setup();
+    const viewButton = screen.getByText("view");
+
+    await dummyUser.click(viewButton);
+
+    // like button is pressed twice
+    const likeButton = screen.getByText("like");
+
+    await dummyUser.click(likeButton);
+    await dummyUser.click(likeButton);
+
+    screen.debug();
+    // test to see if the mock handler is called twice
+    expect(mockHandler.mock.calls).toHaveLength(2);
   });
 });
