@@ -32,7 +32,9 @@ const Blog = ({ blog, user, handleLikeSubmit, handleDelete }) => {
           <div>{blog.url}</div>
           <div>
             likes: {blog.likes}
-            <button onClick={handleLikeSubmit}>like</button>
+            <button onClick={handleLikeSubmit} data-testid={blog.title}>
+              like
+            </button>
           </div>
           <div>{blog.user.name}</div>
           {/* only allow user to see the remove button if they are the creator of the blog */}
